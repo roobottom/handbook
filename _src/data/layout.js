@@ -1,1 +1,1 @@
-module.exports = "default.njk"
+module.exports = "default.11ty.js"

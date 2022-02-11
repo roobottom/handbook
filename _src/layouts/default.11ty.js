@@ -1,17 +1,14 @@
 class Default {
 
-  data() {
-    console.log(this)
-    return {
-      title: function (data) {
-        let inferredTitle = data.content.match(/<h1>(.+?)<\/h1>/)[1]
-        return `${inferredTitle} - ${data.defaults.siteName}`
-      }
-    }
-  }
-
   render(data) {
-    console.log(data)
+    let pageHtml = data.content
+    let inferredTitle = pageHtml.match(/<h1>(.+?)<\/h1>/) === null ? 'no title found' : pageHtml.match(/<h1>(.+?)<\/h1>/)[1]
+    // let mdLinksRegexp = /<a href=['"](.+?).md['"]>/g
+    // pageHtml.match(mdLinksRegexp, function(link) {
+    //   return "whi"
+    // })
+
+
     return `
 <!DOCTYPE html>
 
@@ -19,11 +16,16 @@ class Default {
   <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
-    <title>${data.title()}</title>
+    <title>${inferredTitle} - ${data.defaults.siteName}</title>
   </head>
 
   <body>
-    ${data.content}
+    <div class="side-bar">
+
+    </div>
+    <div class="main" id="top">
+      ${data.content}
+    </div>
   </body>
 </html>
 `
