@@ -1,3 +1,4 @@
 module.exports = {
-  permalink: '/index.html'
+  permalink: '/index.html',
+  layout: 'default.11ty.js'
 }
