@@ -1,12 +1,18 @@
+const path = require('path')
+
 class Default {
 
   render(data) {
-    let pageHtml = data.content
-    let inferredTitle = pageHtml.match(/<h1>(.+?)<\/h1>/) === null ? 'no title found' : pageHtml.match(/<h1>(.+?)<\/h1>/)[1]
-    // let mdLinksRegexp = /<a href=['"](.+?).md['"]>/g
-    // pageHtml.match(mdLinksRegexp, function(link) {
-    //   return "whi"
-    // })
+    var pageHtml = data.content
+    var inferredTitle = pageHtml.match(/<h1>(.+?)<\/h1>/) === null ? 'no title found' : pageHtml.match(/<h1>(.+?)<\/h1>/)[1]
+    
+    //Process all the internal links and ensure they go where they’re supposed to
+    var internalLinksRegexp = /<a href=['"](.+?).md['"]>/g
+    var outputHtml = pageHtml.replace(internalLinksRegexp, function (match, p1) {
+      let currentSection = path.parse(data.page.filePathStem).dir
+      let targetSection = path.parse(match).dir
+      return `${targetSection}, ${currentSection}: <a href="${p1}">`
+    })
 
 
     return `
@@ -24,7 +30,9 @@ class Default {
 
     </div>
     <div class="main" id="top">
-      ${data.content}
+      <p>filePathStem: ${JSON.stringify(path.parse(data.page.filePathStem))}</p>
+      <p>url: ${data.page.url}</p>
+      ${outputHtml}
     </div>
   </body>
 </html>
